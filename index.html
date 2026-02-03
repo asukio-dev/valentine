@@ -1,47 +1,813 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>💖 Valentine</title>
-<style>
-body {
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  background: linear-gradient(135deg, pink, hotpink);
-  font-family: Arial;
-  text-align:center;
-}
-button {
-  padding:15px 30px;
-  font-size:18px;
-  margin:10px;
-  border:none;
-  border-radius:10px;
-}
-#no {
-  position:absolute;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>✨ Une question magique…</title>
+
+  <style>
+    :root{
+      --bg1:#070816;
+      --bg2:#120a2a;
+      --bg3:#3a0b44;
+      --gold:#ffd36a;
+      --pink:#ff62b4;
+      --cyan:#7be9ff;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.12);
+      --stroke: rgba(255,255,255,.18);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 26px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      overflow-x:hidden;
+      background:
+        radial-gradient(1200px 900px at 20% 15%, rgba(255,98,180,.20), transparent 60%),
+        radial-gradient(1000px 800px at 80% 20%, rgba(123,233,255,.18), transparent 55%),
+        radial-gradient(1200px 900px at 55% 95%, rgba(255,211,106,.20), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 50%, var(--bg3));
+    }
+
+    /* ✨ étoiles animées */
+    .stars, .stars2, .stars3{
+      position:fixed; inset:0;
+      background-repeat:repeat;
+      pointer-events:none;
+      opacity:.55;
+      mix-blend-mode:screen;
+      animation: drift 140s linear infinite;
+    }
+    .stars{
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.55), transparent 55%),
+        radial-gradient(1px 1px at 120px 80px, rgba(255,255,255,.45), transparent 55%),
+        radial-gradient(1px 1px at 220px 140px, rgba(255,255,255,.35), transparent 55%);
+      background-size: 260px 220px;
+      filter: blur(.2px);
+    }
+    .stars2{
+      opacity:.35;
+      background-image:
+        radial-gradient(2px 2px at 40px 140px, rgba(255,255,255,.35), transparent 55%),
+        radial-gradient(1px 1px at 180px 40px, rgba(255,255,255,.28), transparent 55%),
+        radial-gradient(1px 1px at 240px 200px, rgba(255,255,255,.22), transparent 55%);
+      background-size: 320px 280px;
+      animation-duration: 220s;
+      filter: blur(.4px);
+    }
+    .stars3{
+      opacity:.25;
+      background-image:
+        radial-gradient(2px 2px at 90px 30px, rgba(255,255,255,.25), transparent 55%),
+        radial-gradient(1px 1px at 210px 120px, rgba(255,255,255,.20), transparent 55%),
+        radial-gradient(1px 1px at 260px 210px, rgba(255,255,255,.18), transparent 55%);
+      background-size: 420px 360px;
+      animation-duration: 300s;
+      filter: blur(.6px);
+    }
+    @keyframes drift{
+      from{ transform: translate3d(0,0,0); }
+      to{ transform: translate3d(-1200px, 400px, 0); }
+    }
+
+    /* header top */
+    .topbar{
+      position:sticky; top:0;
+      z-index:10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.08));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .topbar-inner{
+      max-width:1100px; margin:0 auto;
+      padding:18px 18px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      user-select:none;
+    }
+    .badge{
+      width:36px; height:36px;
+      border-radius:14px;
+      background:
+        radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,.60), transparent 60%),
+        linear-gradient(135deg, rgba(255,98,180,.95), rgba(123,233,255,.85));
+      box-shadow: 0 12px 30px rgba(255,98,180,.25);
+      position:relative;
+    }
+    .badge:after{
+      content:"";
+      position:absolute; inset:7px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.25);
+    }
+    .brand h1{
+      font-size:14px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      margin:0;
+      color: rgba(255,255,255,.85);
+    }
+    .brand small{
+      display:block;
+      font-size:12px;
+      letter-spacing:.04em;
+      color: var(--muted);
+      margin-top:2px;
+    }
+    .chip{
+      display:flex; gap:10px; align-items:center;
+      color: rgba(255,255,255,.80);
+      font-size:12px;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    main{
+      max-width:1100px;
+      margin:0 auto;
+      padding:28px 18px 80px;
+      position:relative;
+    }
+
+    /* Hero */
+    .hero{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:22px;
+      align-items:stretch;
+      margin-top:18px;
+    }
+    @media (max-width: 920px){
+      .hero{ grid-template-columns:1fr; }
+    }
+
+    .panel{
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.05));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    /* Left big card */
+    .panel-left{
+      padding:28px 26px;
+      min-height: 420px;
+    }
+    .sparkle{
+      position:absolute;
+      inset:-80px -120px auto auto;
+      width:260px; height:260px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.30), transparent 55%),
+                  radial-gradient(circle at 60% 40%, rgba(255,98,180,.35), transparent 55%),
+                  radial-gradient(circle at 45% 70%, rgba(123,233,255,.25), transparent 55%);
+      filter: blur(6px);
+      transform: rotate(10deg);
+      opacity:.7;
+    }
+
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.82);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .k-dot{
+      width:8px; height:8px; border-radius:50%;
+      background: linear-gradient(135deg, var(--gold), var(--pink));
+      box-shadow: 0 0 18px rgba(255,211,106,.55);
+    }
+
+    .title{
+      margin:18px 0 10px;
+      font-size: clamp(30px, 4.2vw, 52px);
+      line-height:1.03;
+      letter-spacing:-.02em;
+    }
+    .title span{
+      background: linear-gradient(90deg, rgba(255,211,106,1), rgba(255,98,180,1), rgba(123,233,255,1));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color: transparent;
+      filter: drop-shadow(0 10px 22px rgba(255,98,180,.12));
+    }
+    .subtitle{
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height:1.55;
+      max-width: 56ch;
+      margin-bottom: 18px;
+    }
+
+    /* Castle illustration */
+    .castle{
+      margin-top: 20px;
+      position:relative;
+      height: 190px;
+      border-radius: 22px;
+      background:
+        radial-gradient(500px 160px at 50% 100%, rgba(255,255,255,.12), transparent 55%),
+        linear-gradient(135deg, rgba(255,98,180,.15), rgba(123,233,255,.12));
+      border: 1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+    }
+    .castle svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      opacity:.95;
+      filter: drop-shadow(0 16px 28px rgba(0,0,0,.35));
+    }
+    .shine{
+      position:absolute;
+      inset:-60% -30%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.20), transparent);
+      transform: rotate(18deg);
+      animation: shine 4.5s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes shine{
+      0%{ transform: translateX(-30%) rotate(18deg); opacity:0; }
+      35%{ opacity:.65; }
+      55%{ opacity:.25; }
+      100%{ transform: translateX(40%) rotate(18deg); opacity:0; }
+    }
+
+    /* Right info card */
+    .panel-right{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .mini{
+      border-radius:22px;
+      background: linear-gradient(180deg, var(--card2), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .mini h3{
+      margin:0 0 8px;
+      font-size:14px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.85);
+    }
+    .mini p{
+      margin:0;
+      color: var(--muted);
+      font-size:13.5px;
+      line-height:1.55;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size:13px;
+      color: rgba(255,255,255,.82);
+      user-select:none;
+    }
+    .pill b{ color: rgba(255,255,255,.95); font-weight:700; }
+    .pill i{
+      width:9px; height:9px; border-radius:50%;
+      background: linear-gradient(135deg, var(--pink), var(--cyan));
+      box-shadow: 0 0 16px rgba(123,233,255,.45);
+      display:inline-block;
+    }
+
+    /* Buttons area */
+    .actions{
+      margin-top: 18px;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:center;
+      position:relative;
+      min-height: 64px;
+    }
+
+    .btn{
+      border:0;
+      cursor:pointer;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing:.02em;
+      color: rgba(255,255,255,.92);
+      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{ transform: scale(.98); }
+
+    .btn-yes{
+      background: linear-gradient(135deg, rgba(255,98,180,1), rgba(123,233,255,1));
+      box-shadow: 0 18px 40px rgba(255,98,180,.18);
+      position:relative;
+      overflow:hidden;
+    }
+    .btn-yes:before{
+      content:"";
+      position:absolute; inset:-60% -40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.45), transparent 55%);
+      transform: rotate(18deg);
+      opacity:.35;
+    }
+    .btn-yes:hover{ filter: brightness(1.07); transform: translateY(-1px); }
+
+    .btn-no{
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 14px 30px rgba(0,0,0,.20);
+      position:absolute; /* pour qu'il puisse bouger */
+      left: 160px; top: 0px;
+    }
+    @media (max-width: 520px){
+      .btn-no{ left: 10px; top: 62px; }
+    }
+    .btn-no:hover{ filter: brightness(1.07); }
+
+    .hint{
+      margin-top: 10px;
+      color: rgba(255,255,255,.62);
+      font-size: 12.5px;
+    }
+
+    /* Modal */
+    .overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:50;
+    }
+    .modal{
+      width:min(560px, 96vw);
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      overflow:hidden;
+      position:relative;
+    }
+    .modal-head{
+      padding:18px 18px 0;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .modal h2{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:-.01em;
+    }
+    .close{
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.92);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor:pointer;
+    }
+    .modal-body{
+      padding: 10px 18px 18px;
+      color: rgba(255,255,255,.82);
+      line-height:1.55;
+      font-size: 14.5px;
+    }
+    .modal-foot{
+      padding: 0 18px 18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .btn-ghost{
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow:none;
+    }
+    .btn-ghost:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+
+    /* Confettis */
+    canvas#confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:60;
+      display:none;
+    }
+
+    /* Small footer */
+    .footer{
+      margin-top: 24px;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      text-align:center;
+    }
+    .footer a{
+      color: rgba(255,211,106,.85);
+      text-decoration:none;
+      border-bottom:1px dashed rgba(255,211,106,.35);
+    }
+  </style>
 </head>
+
 <body>
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
 
-<h1>Veux-tu être ma Valentine ? 💘</h1>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="badge" aria-hidden="true"></div>
+        <div>
+          <h1>MAGIC MOMENT</h1>
+          <small>une petite aventure… juste pour toi ✨</small>
+        </div>
+      </div>
+      <div class="chip">🏰 ✨ 💖 <span style="opacity:.7">—</span> <span id="dateChip"></span></div>
+    </div>
+  </div>
 
-<button onclick="alert('Je savais que tu dirais oui 😍💖')">Oui</button>
-<button id="no" onmouseover="move()">Non</button>
+  <main>
+    <section class="hero">
+      <!-- LEFT -->
+      <div class="panel panel-left">
+        <div class="sparkle" aria-hidden="true"></div>
 
-<script>
-function move(){
-  const x = Math.random() * (window.innerWidth - 120);
-  const y = Math.random() * (window.innerHeight - 60);
-  const no = document.getElementById("no");
-  no.style.left = x + "px";
-  no.style.top = y + "px";
-}
-</script>
+        <div class="kicker"><span class="k-dot"></span> Invitation féerique</div>
 
+        <h2 class="title">
+          Veux-tu être <span>ma Valentine</span> ? 💘
+        </h2>
+
+        <p class="subtitle">
+          J’ai préparé une petite page comme une entrée dans un monde magique…  
+          Promis, c’est <b>une expérience</b> : lumières, confettis, et une réponse qui fait sourire 😌✨
+        </p>
+
+        <div class="actions" id="actions">
+          <button class="btn btn-yes" id="yesBtn">Oui, évidemment 💖</button>
+          <button class="btn btn-no" id="noBtn">Non 🙄</button>
+        </div>
+
+        <div class="hint">Astuce : le bouton “Non” est… un peu timide 😈</div>
+
+        <div class="castle" aria-hidden="true">
+          <div class="shine"></div>
+          <!-- illustration "château" originale (inspirée féerique, pas une copie) -->
+          <svg viewBox="0 0 900 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop stop-color="rgba(255,211,106,0.95)"/>
+                <stop offset="0.5" stop-color="rgba(255,98,180,0.85)"/>
+                <stop offset="1" stop-color="rgba(123,233,255,0.8)"/>
+              </linearGradient>
+              <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
+                <stop stop-color="rgba(255,255,255,0.18)"/>
+                <stop offset="1" stop-color="rgba(255,255,255,0.06)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- moon glow -->
+            <circle cx="740" cy="85" r="62" fill="rgba(255,255,255,0.09)"/>
+            <circle cx="740" cy="85" r="46" fill="rgba(255,255,255,0.06)"/>
+
+            <!-- ground mist -->
+            <path d="M0 250 C180 210, 320 290, 520 250 C700 215, 780 275, 900 240 V320 H0 Z"
+              fill="rgba(255,255,255,0.06)"/>
+
+            <!-- castle base -->
+            <path d="M230 260 V165 L285 145 V120 L330 105 V145 L375 120 V145 L420 115 V145 L465 120 V145 L510 105 V145 L555 120 V145 L610 145 V260"
+              fill="url(#g2)" stroke="rgba(255,255,255,0.18)"/>
+
+            <!-- central tower -->
+            <path d="M420 260 V125 L450 95 L480 125 V260"
+              fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.18)"/>
+
+            <!-- side towers -->
+            <path d="M275 260 V155 L295 135 L315 155 V260" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)"/>
+            <path d="M585 260 V155 L605 135 L625 155 V260" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)"/>
+
+            <!-- flags -->
+            <path d="M450 96 L450 62" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
+            <path d="M450 66 C465 66, 470 74, 458 82 C470 84, 465 96, 450 90" fill="url(#g1)" opacity="0.85"/>
+
+            <path d="M295 136 L295 108" stroke="url(#g1)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+            <path d="M295 110 C305 110, 308 116, 300 122 C308 124, 305 132, 295 128" fill="url(#g1)" opacity="0.75"/>
+
+            <path d="M605 136 L605 108" stroke="url(#g1)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+            <path d="M605 110 C615 110, 618 116, 610 122 C618 124, 615 132, 605 128" fill="url(#g1)" opacity="0.75"/>
+
+            <!-- sparkle path -->
+            <path d="M90 120 C170 60, 260 70, 350 40 C470 -5, 570 40, 690 30 C780 22, 820 10, 860 18"
+              stroke="url(#g1)" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+            <circle cx="120" cy="100" r="3.5" fill="rgba(255,255,255,0.55)"/>
+            <circle cx="360" cy="44" r="3.5" fill="rgba(255,255,255,0.45)"/>
+            <circle cx="700" cy="30" r="3.5" fill="rgba(255,255,255,0.45)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="panel panel-right">
+        <div class="mini">
+          <h3>🪄 Règle du jeu</h3>
+          <p>
+            C’est une page magique : si tu choisis “Non”, le bouton essaie de s’échapper…
+            comme s’il connaissait déjà la bonne réponse 😈
+          </p>
+          <div class="pill"><i></i> Mode : <b>Féerique + Troll</b></div>
+        </div>
+
+        <div class="mini">
+          <h3>✨ Promesse</h3>
+          <p>
+            Si tu cliques “Oui”, tu déclenches une petite célébration : confettis, message secret,
+            et un “ticket” symbolique pour un moment à deux 💖
+          </p>
+          <div class="pill"><i></i> Effets : <b>Confettis + Pop-up</b></div>
+        </div>
+
+        <div class="mini">
+          <h3>🎵 Option musique</h3>
+          <p>
+            Sur téléphone, la musique démarre seulement après une action.
+            Ici elle est <b>désactivée par défaut</b> — tu peux l’activer dans le code (je t’explique plus bas).
+          </p>
+          <div class="pill"><i></i> Compatibilité : <b>Mobile OK</b></div>
+        </div>
+
+        <div class="footer">
+          Astuce : si tu veux ajouter son prénom, cherche <b>PRÉNOM_ICI</b> dans le code.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Confettis -->
+  <canvas id="confetti"></canvas>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="mTitle">💖 C’est officiel !</h2>
+        <button class="close" id="closeBtn">Fermer</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <p style="margin:0 0 10px">
+          Tu viens d’accepter une invitation magique ✨
+        </p>
+        <p style="margin:0">
+          <b>Estel</b>, veux-tu être ma Valentine pour une aventure à deux ? 🏰💘
+          <br><span style="opacity:.75">(Oui, tu es tombée dans le piège 😈)</span>
+        </p>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="copyBtn">Copier une phrase 💌</button>
+        <button class="btn btn-yes" id="okBtn">J’accepte (encore) 💖</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Affiche une date sympa en haut
+    (function(){
+      const d = new Date();
+      const opts = { weekday:'long', day:'2-digit', month:'long' };
+      document.getElementById('dateChip').textContent =
+        d.toLocaleDateString('fr-FR', opts);
+    })();
+
+    // 🎯 Elements
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const actions = document.getElementById('actions');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('closeBtn');
+    const okBtn = document.getElementById('okBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const confettiCanvas = document.getElementById('confetti');
+
+    // ====== 😈 Bouton "Non" qui fuit (PC + mobile) ======
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function moveNoButton(){
+      const rect = actions.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // zone de déplacement = autour de la zone actions
+      const padding = 6;
+      const minX = rect.left + padding;
+      const maxX = rect.right - btnRect.width - padding;
+      const minY = rect.top + padding;
+      const maxY = rect.bottom - btnRect.height - padding;
+
+      // si l'espace est trop petit (mobile), on bouge dans l'écran
+      const viewportFallback = (maxX - minX < 40) || (maxY - minY < 20);
+
+      let x, y;
+      if(viewportFallback){
+        x = Math.random() * (window.innerWidth - btnRect.width - 20) + 10;
+        y = Math.random() * (window.innerHeight - btnRect.height - 140) + 90;
+      }else{
+        x = Math.random() * (maxX - minX) + minX;
+        y = Math.random() * (maxY - minY) + minY;
+      }
+
+      // convert to relative inside actions (because button is absolute)
+      const parentRect = actions.getBoundingClientRect();
+      const left = clamp(x - parentRect.left, 0, parentRect.width - btnRect.width);
+      const top  = clamp(y - parentRect.top,  0, parentRect.height - btnRect.height);
+
+      noBtn.style.left = left + "px";
+      noBtn.style.top  = top + "px";
+    }
+
+    // PC: au survol
+    noBtn.addEventListener('mouseenter', moveNoButton);
+
+    // Mobile: au toucher (premier tap)
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      moveNoButton();
+    }, {passive:false});
+
+    // Bonus: si elle essaie encore
+    noBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    // ====== 🎉 Confettis (canvas) ======
+    const confetti = {
+      running:false,
+      parts:[],
+      t:0
+    };
+
+    function resizeCanvas(){
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function startConfetti(){
+      resizeCanvas();
+      confettiCanvas.style.display = 'block';
+      const ctx = confettiCanvas.getContext('2d');
+      confetti.running = true;
+      confetti.parts = [];
+      confetti.t = 0;
+
+      const colors = [
+        [255, 98, 180],
+        [123, 233, 255],
+        [255, 211, 106],
+        [255, 255, 255],
+        [181, 120, 255]
+      ];
+
+      const count = 180;
+      for(let i=0;i<count;i++){
+        const c = colors[Math.floor(Math.random()*colors.length)];
+        confetti.parts.push({
+          x: Math.random()*confettiCanvas.width,
+          y: -20 - Math.random()*confettiCanvas.height*0.3,
+          vx: (Math.random()-0.5)*4,
+          vy: 2 + Math.random()*6,
+          s: 4 + Math.random()*6,
+          r: Math.random()*Math.PI,
+          vr: (Math.random()-0.5)*0.25,
+          a: 0.85,
+          col: `rgba(${c[0]},${c[1]},${c[2]},`
+        });
+      }
+
+      function frame(){
+        if(!confetti.running) return;
+        confetti.t++;
+
+        ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+
+        for(const p of confetti.parts){
+          p.x += p.vx;
+          p.y += p.vy;
+          p.r += p.vr;
+          p.vy += 0.02; // gravité
+          p.a *= 0.995;
+
+          // wrap x
+          if(p.x < -30) p.x = confettiCanvas.width + 30;
+          if(p.x > confettiCanvas.width + 30) p.x = -30;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.r);
+          ctx.fillStyle = p.col + p.a + ')';
+          ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.7);
+          ctx.restore();
+        }
+
+        // stop après ~4s
+        if(confetti.t > 240){
+          confetti.running = false;
+          confettiCanvas.style.display = 'none';
+        }else{
+          requestAnimationFrame(frame);
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // ====== ✅ Oui : ouvre modal + confettis + (option musique) ======
+    function openModal(){
+      overlay.style.display = 'flex';
+      startConfetti();
+      // 👉 Option musique: décommente si tu mets un fichier mp3 (voir plus bas)
+      // playMusic();
+    }
+    function closeModal(){
+      overlay.style.display = 'none';
+    }
+
+    yesBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    okBtn.addEventListener('click', () => {
+      closeModal();
+      startConfetti();
+    });
+
+    // Fermer si clique en dehors
+    overlay.addEventListener('click', (e) => {
+      if(e.target === overlay) closeModal();
+    });
+
+    // Copier une phrase mignonne
+    copyBtn.addEventListener('click', async () => {
+      const text = "J’ai une surprise… Tu veux être ma Valentine ? 💘🏰✨";
+      try{
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Copié ! 💖";
+        setTimeout(()=> copyBtn.textContent = "Copier une phrase 💌", 1600);
+      }catch{
+        alert("Copie impossible ici, mais voici la phrase :\n\n" + text);
+      }
+    });
+
+    // ====== 🎵 Option musique (facultative) ======
+    // 1) Ajoute un fichier mp3 dans le repo (ex: music.mp3)
+    // 2) Décommente playMusic() dans openModal()
+    // const audio = new Audio('music.mp3');
+    // audio.loop = true;
+    // audio.volume = 0.35;
+    // function playMusic(){
+    //   audio.play().catch(()=>{});
+    // }
+
+    // Petit placement initial du bouton non (au cas où)
+    window.addEventListener('load', () => {
+      // place "Non" bien visible avant qu'il bouge
+      noBtn.style.left = '160px';
+      noBtn.style.top = '0px';
+    });
+  </script>
 </body>
 </html>
