@@ -691,13 +691,13 @@
     .wheelBtn{ display:block; height:56px; }
   }
 
-    .ctaRow{
-      margin-top: 12px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
+        .ctaRow{
+      justify-content: space-between;
+    }
+    @media (max-width: 520px){
+      .ctaRow button{
+        flex: 1 1 48%;
+      }
     }
 
     .btn-book{
@@ -1172,31 +1172,83 @@
 
     let selectedIndex = 4; // default: 14 février
 
-    function renderWheel(){
-      wheelList.innerHTML = "";
-      // show all items, highlight selected
-      dates.forEach((d, i) => {
-        const el = document.createElement('div');
-        el.className = 'wheelItem';
-        el.dataset.active = (i === selectedIndex) ? "true" : "false";
-        el.innerHTML = `
-          <span>${d.label}</span>
-          <small>${d.avail ? "DISPONIBLE ✨" : "COMPLET"}</small>
-        `;
-        el.addEventListener('click', () => {
-          selectedIndex = i;
-          renderWheel();
-          updateLabels();
-        });
-        wheelList.appendChild(el);
-      });
+    const wheel = document.querySelector('.wheelList');
 
-      // center selected visually: move list up/down
-      // (each item approx 54px including gap)
-      const itemHeight = 54; // tuned visually
-      const offset = (selectedIndex - 1) * itemHeight; // keeps selected in center zone
-      wheelList.style.transform = `translateY(calc(-50% - ${offset}px))`;
-    }
+function renderWheel(){
+  wheelList.innerHTML = "";
+  dates.forEach((d, i) => {
+    const el = document.createElement('div');
+    el.className = 'wheelItem';
+    el.dataset.index = i;
+    el.innerHTML = `
+      <span>${d.label}</span>
+      <small>${d.avail ? "DISPONIBLE ✨" : "COMPLET"}</small>
+    `;
+    el.addEventListener('click', () => scrollToIndex(i));
+    wheelList.appendChild(el);
+  });
+
+  // positionne sur l’index choisi
+  setTimeout(() => scrollToIndex(selectedIndex, true), 0);
+}
+
+function scrollToIndex(i, instant=false){
+  const items = wheelList.querySelectorAll('.wheelItem');
+  const el = items[i];
+  if(!el) return;
+
+  // scroll jusqu’à ce que l’élément soit centré
+  el.scrollIntoView({
+    block: "center",
+    behavior: instant ? "auto" : "smooth"
+  });
+
+  selectedIndex = i;
+  updateActive();
+  updateLabels();
+}
+
+function updateActive(){
+  const items = wheelList.querySelectorAll('.wheelItem');
+  items.forEach((it, idx) => it.dataset.active = (idx === selectedIndex) ? "true" : "false");
+}
+
+// Détecte quel élément est au centre pendant le scroll (mobile-friendly)
+let scrollTimer = null;
+wheelList.addEventListener('scroll', () => {
+  if(scrollTimer) clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    const items = [...wheelList.querySelectorAll('.wheelItem')];
+    const centerY = wheelList.getBoundingClientRect().top + wheelList.getBoundingClientRect().height/2;
+
+    let bestIdx = 0;
+    let bestDist = Infinity;
+
+    items.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      const elCenter = r.top + r.height/2;
+      const dist = Math.abs(elCenter - centerY);
+      if(dist < bestDist){
+        bestDist = dist;
+        bestIdx = Number(el.dataset.index);
+      }
+    });
+
+    selectedIndex = bestIdx;
+    updateActive();
+    updateLabels();
+  }, 80);
+});
+
+// Desktop ▲▼ (si affichés)
+upBtn.addEventListener('click', () => {
+  selectedIndex = (selectedIndex - 1 + dates.length) % dates.length;
+  scrollToIndex(selectedIndex);
+});
+downBtn.addEventListener('click', () => {
+  selectedIndex = (selectedIndex + 1) % dates.length;
+  scrollToIndex(selectedIndex);
+});
 
     function updateLabels(){
       const d = dates[selectedIndex];
