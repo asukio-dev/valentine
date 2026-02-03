@@ -592,85 +592,104 @@
       background: rgba(255,82,184,1);
       box-shadow: 0 0 18px rgba(255,82,184,.35);
     }
+  /* ===== Date picker (mobile friendly snap wheel) ===== */
+  .wheelWrap{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:12px;
+  }
+  
+  /* On enlève les gros boutons sur mobile, on garde optionnel desktop */
+  .wheelBtn{ display:none; }
+  
+  .wheel{
+    position:relative;
+    height: 210px;
+    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.18);
+    overflow:hidden;
+  }
+  
+  /* bande highlight parfaitement centrée */
+  .wheel:after{
+    content:"";
+    position:absolute;
+    left:12px; right:12px;
+    top:50%;
+    height:56px;                /* = hauteur d'une ligne */
+    transform: translateY(-50%);
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.20);
+    background: rgba(255,255,255,.10);
+    box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    pointer-events:none;
+  }
+  
+  /* fade haut/bas */
+  .wheel:before{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(180deg,
+      rgba(16,14,30,.95),
+      transparent 28%,
+      transparent 72%,
+      rgba(16,14,30,.95)
+    );
+    pointer-events:none;
+    z-index:2;
+  }
+  
+  /* La liste devient un scroll natif + snap */
+  .wheelList{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    overflow-y:auto;
+    padding: calc(105px - 28px) 0; /* centre la zone active (105=height/2, 28=half item height) */
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .wheelList::-webkit-scrollbar{ width: 0; height: 0; }
+  
+  .wheelItem{
+    height:56px;                 /* IMPORTANT: doit matcher wheel:after height */
+    width: calc(100% - 24px);
+    margin: 10px auto;           /* espace entre lignes */
+    padding: 0 14px;
+    border-radius: 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color: rgba(255,255,255,.78);
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.04);
+    font-weight:800;
+    scroll-snap-align: center;
+  }
+  
+  .wheelItem small{
+    font-size:12px;
+    font-weight:900;
+    color: rgba(255,255,255,.62);
+  }
+  
+  /* actif: un peu plus brillant */
+  .wheelItem[data-active="true"]{
+    background: rgba(255,255,255,.12);
+    border-color: rgba(255,255,255,.20);
+    color: rgba(255,255,255,.95);
+  }
+  
+  /* Desktop: on peut réactiver ▲▼ si tu veux */
+  @media (min-width: 900px){
     .wheelWrap{
-      display:grid;
       grid-template-columns: 46px 1fr 46px;
-      gap:10px;
       align-items:center;
     }
-    .wheelBtn{
-      height:52px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      color: rgba(255,255,255,.90);
-      cursor:pointer;
-      font-weight:900;
-      font-size:18px;
-    }
-    .wheel{
-      position:relative;
-      height: 160px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      overflow:hidden;
-    }
-    .wheel:before{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(180deg, rgba(16,14,30,.95), transparent 30%, transparent 70%, rgba(16,14,30,.95));
-      pointer-events:none;
-    }
-    .wheel:after{
-      content:"";
-      position:absolute;
-      left:10px; right:10px;
-      top:50%;
-      height:44px;
-      transform: translateY(-50%);
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      box-shadow: 0 14px 40px rgba(0,0,0,.35);
-      pointer-events:none;
-    }
-
-    .wheelList{
-      position:absolute;
-      top:50%;
-      left:0; right:0;
-      transform: translateY(-50%);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:10px;
-      transition: transform .25s ease;
-    }
-    .wheelItem{
-      width: calc(100% - 22px);
-      padding: 10px 12px;
-      border-radius: 14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      color: rgba(255,255,255,.78);
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      font-weight:800;
-      letter-spacing:.01em;
-    }
-    .wheelItem small{
-      font-size:12px;
-      font-weight:800;
-      color: rgba(255,255,255,.62);
-    }
-    .wheelItem[data-active="true"]{
-      background: rgba(255,255,255,.12);
-      border-color: rgba(255,255,255,.18);
-      color: rgba(255,255,255,.92);
-      box-shadow: 0 18px 40px rgba(0,0,0,.30);
-    }
+    .wheelBtn{ display:block; height:56px; }
+  }
 
     .ctaRow{
       margin-top: 12px;
