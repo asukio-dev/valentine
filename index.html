@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>✨ Une question magique…</title>
+  <title>Magical Park — Réservation</title>
 
   <style>
     :root{
-      --bg1:#070816;
-      --bg2:#120a2a;
-      --bg3:#3a0b44;
-      --gold:#ffd36a;
-      --pink:#ff62b4;
-      --cyan:#7be9ff;
-      --card: rgba(255,255,255,.08);
-      --card2: rgba(255,255,255,.12);
+      --bg0:#060713;
+      --bg1:#0b1030;
+      --bg2:#1a0f3a;
+      --glass: rgba(255,255,255,.10);
+      --glass2: rgba(255,255,255,.14);
       --stroke: rgba(255,255,255,.18);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.72);
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-      --radius: 26px;
+      --muted: rgba(255,255,255,.70);
+
+      --blue:#2b7bff;
+      --blue2:#48d7ff;
+      --pink:#ff52b8;
+      --gold:#ffd36a;
+
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --shadow2: 0 30px 90px rgba(0,0,0,.65);
+
+      --r1: 22px;
+      --r2: 28px;
     }
 
     *{ box-sizing:border-box; }
@@ -28,418 +34,802 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      overflow-x:hidden;
       background:
-        radial-gradient(1200px 900px at 20% 15%, rgba(255,98,180,.20), transparent 60%),
-        radial-gradient(1000px 800px at 80% 20%, rgba(123,233,255,.18), transparent 55%),
-        radial-gradient(1200px 900px at 55% 95%, rgba(255,211,106,.20), transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2) 50%, var(--bg3));
+        radial-gradient(1100px 700px at 20% 10%, rgba(72,215,255,.18), transparent 55%),
+        radial-gradient(900px 700px at 70% 10%, rgba(255,82,184,.18), transparent 55%),
+        radial-gradient(900px 700px at 50% 95%, rgba(255,211,106,.16), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 45%, var(--bg2));
+      overflow-x:hidden;
     }
 
-    /* ✨ étoiles animées */
-    .stars, .stars2, .stars3{
+    /* ====== Sparkly background ====== */
+    .stars, .stars2{
       position:fixed; inset:0;
-      background-repeat:repeat;
       pointer-events:none;
       opacity:.55;
-      mix-blend-mode:screen;
-      animation: drift 140s linear infinite;
+      mix-blend-mode: screen;
+      background-repeat:repeat;
+      animation: drift 180s linear infinite;
+      filter: blur(.2px);
+      z-index:0;
     }
     .stars{
       background-image:
-        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.55), transparent 55%),
-        radial-gradient(1px 1px at 120px 80px, rgba(255,255,255,.45), transparent 55%),
-        radial-gradient(1px 1px at 220px 140px, rgba(255,255,255,.35), transparent 55%);
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.5), transparent 55%),
+        radial-gradient(1px 1px at 120px 80px, rgba(255,255,255,.35), transparent 55%),
+        radial-gradient(1px 1px at 220px 140px, rgba(255,255,255,.25), transparent 55%);
       background-size: 260px 220px;
-      filter: blur(.2px);
     }
     .stars2{
-      opacity:.35;
+      opacity:.30;
       background-image:
-        radial-gradient(2px 2px at 40px 140px, rgba(255,255,255,.35), transparent 55%),
-        radial-gradient(1px 1px at 180px 40px, rgba(255,255,255,.28), transparent 55%),
-        radial-gradient(1px 1px at 240px 200px, rgba(255,255,255,.22), transparent 55%);
-      background-size: 320px 280px;
-      animation-duration: 220s;
-      filter: blur(.4px);
-    }
-    .stars3{
-      opacity:.25;
-      background-image:
-        radial-gradient(2px 2px at 90px 30px, rgba(255,255,255,.25), transparent 55%),
-        radial-gradient(1px 1px at 210px 120px, rgba(255,255,255,.20), transparent 55%),
-        radial-gradient(1px 1px at 260px 210px, rgba(255,255,255,.18), transparent 55%);
-      background-size: 420px 360px;
-      animation-duration: 300s;
-      filter: blur(.6px);
+        radial-gradient(2px 2px at 40px 140px, rgba(255,255,255,.30), transparent 55%),
+        radial-gradient(1px 1px at 180px 40px, rgba(255,255,255,.22), transparent 55%),
+        radial-gradient(1px 1px at 240px 200px, rgba(255,255,255,.18), transparent 55%);
+      background-size: 360px 300px;
+      animation-duration: 260s;
+      filter: blur(.5px);
     }
     @keyframes drift{
       from{ transform: translate3d(0,0,0); }
-      to{ transform: translate3d(-1200px, 400px, 0); }
+      to{ transform: translate3d(-1100px, 420px, 0); }
     }
 
-    /* header top */
-    .topbar{
-      position:sticky; top:0;
+    /* ====== Header ====== */
+    header{
+      position:sticky;
+      top:0;
       z-index:10;
-      backdrop-filter: blur(12px);
-      background: linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.08));
-      border-bottom: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(0,0,0,.38), rgba(0,0,0,.12));
+      border-bottom:1px solid rgba(255,255,255,.10);
     }
-    .topbar-inner{
-      max-width:1100px; margin:0 auto;
-      padding:18px 18px;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px;
+    .nav{
+      max-width:1180px;
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
     }
     .brand{
-      display:flex; align-items:center; gap:10px;
+      display:flex;
+      align-items:center;
+      gap:12px;
       user-select:none;
     }
-    .badge{
-      width:36px; height:36px;
-      border-radius:14px;
+    .logo{
+      width:42px; height:42px;
+      border-radius:16px;
       background:
-        radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,.60), transparent 60%),
-        linear-gradient(135deg, rgba(255,98,180,.95), rgba(123,233,255,.85));
-      box-shadow: 0 12px 30px rgba(255,98,180,.25);
+        radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,.55), transparent 60%),
+        linear-gradient(135deg, rgba(43,123,255,1), rgba(255,82,184,1), rgba(72,215,255,1));
+      box-shadow: 0 18px 40px rgba(43,123,255,.18);
       position:relative;
+      border:1px solid rgba(255,255,255,.16);
     }
-    .badge:after{
+    .logo:after{
       content:"";
-      position:absolute; inset:7px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.25);
+      position:absolute; inset:8px;
+      border-radius:13px;
+      border:1px solid rgba(255,255,255,.20);
     }
-    .brand h1{
-      font-size:14px;
-      letter-spacing:.22em;
+    .brand-title{
+      line-height:1.05;
+    }
+    .brand-title b{
+      display:block;
+      letter-spacing:.18em;
       text-transform:uppercase;
-      margin:0;
-      color: rgba(255,255,255,.85);
+      font-size:12px;
+      color: rgba(255,255,255,.88);
     }
-    .brand small{
+    .brand-title span{
       display:block;
       font-size:12px;
-      letter-spacing:.04em;
       color: var(--muted);
-      margin-top:2px;
+      margin-top:3px;
+      letter-spacing:.03em;
+    }
+
+    .navlinks{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      color: rgba(255,255,255,.78);
+      font-size:13px;
+    }
+    .navlinks a{
+      color: rgba(255,255,255,.78);
+      text-decoration:none;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid transparent;
+      transition: .15s ease;
+      white-space:nowrap;
+    }
+    .navlinks a:hover{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.10);
+    }
+    .right{
+      display:flex;
+      gap:10px;
+      align-items:center;
     }
     .chip{
-      display:flex; gap:10px; align-items:center;
-      color: rgba(255,255,255,.80);
+      display:flex;
+      gap:10px;
+      align-items:center;
       font-size:12px;
-      padding:10px 14px;
+      color: rgba(255,255,255,.78);
+      padding:10px 12px;
       border-radius:999px;
       background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.12);
     }
-
-    main{
-      max-width:1100px;
-      margin:0 auto;
-      padding:28px 18px 80px;
-      position:relative;
-    }
-
-    /* Hero */
-    .hero{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:22px;
-      align-items:center;
-      margin-top:18px;
-    }
-
-    .panel{
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.05));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-
-    /* Left big card */
-    .panel-left{
-      padding:28px 26px;
-      min-height: 420px;
-    }
-    .sparkle{
-      position:absolute;
-      inset:-80px -120px auto auto;
-      width:260px; height:260px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.30), transparent 55%),
-                  radial-gradient(circle at 60% 40%, rgba(255,98,180,.35), transparent 55%),
-                  radial-gradient(circle at 45% 70%, rgba(123,233,255,.25), transparent 55%);
-      filter: blur(6px);
-      transform: rotate(10deg);
-      opacity:.7;
-    }
-
-    .kicker{
-      display:inline-flex;
-      gap:10px;
-      align-items:center;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: rgba(255,255,255,.82);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .k-dot{
-      width:8px; height:8px; border-radius:50%;
+    .chip i{
+      width:9px;height:9px;border-radius:50%;
       background: linear-gradient(135deg, var(--gold), var(--pink));
-      box-shadow: 0 0 18px rgba(255,211,106,.55);
-    }
-
-    .title{
-      margin:18px 0 10px;
-      font-size: clamp(30px, 4.2vw, 52px);
-      line-height:1.03;
-      letter-spacing:-.02em;
-    }
-    .title span{
-      background: linear-gradient(90deg, rgba(255,211,106,1), rgba(255,98,180,1), rgba(123,233,255,1));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color: transparent;
-      filter: drop-shadow(0 10px 22px rgba(255,98,180,.12));
-    }
-    .subtitle{
-      color: var(--muted);
-      font-size: 15.5px;
-      line-height:1.55;
-      max-width: 56ch;
-      margin-bottom: 18px;
-    }
-
-    /* Castle illustration */
-    .castle{
-      margin-top: 20px;
-      position:relative;
-      height: 190px;
-      border-radius: 22px;
-      background:
-        radial-gradient(500px 160px at 50% 100%, rgba(255,255,255,.12), transparent 55%),
-        linear-gradient(135deg, rgba(255,98,180,.15), rgba(123,233,255,.12));
-      border: 1px solid rgba(255,255,255,.14);
-      overflow:hidden;
-    }
-    .castle svg{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      opacity:.95;
-      filter: drop-shadow(0 16px 28px rgba(0,0,0,.35));
-    }
-    .shine{
-      position:absolute;
-      inset:-60% -30%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.20), transparent);
-      transform: rotate(18deg);
-      animation: shine 4.5s ease-in-out infinite;
-      pointer-events:none;
-    }
-    @keyframes shine{
-      0%{ transform: translateX(-30%) rotate(18deg); opacity:0; }
-      35%{ opacity:.65; }
-      55%{ opacity:.25; }
-      100%{ transform: translateX(40%) rotate(18deg); opacity:0; }
-    }
-
-    /* Right info card */
-    .panel-right{
-      padding:22px;
-      display:none;
-      flex-direction:column;
-      gap:14px;
-    }
-    .mini{
-      border-radius:22px;
-      background: linear-gradient(180deg, var(--card2), rgba(255,255,255,.06));
-      border: 1px solid rgba(255,255,255,.14);
-      padding:16px;
-      position:relative;
-      overflow:hidden;
-    }
-    .mini h3{
-      margin:0 0 8px;
-      font-size:14px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color: rgba(255,255,255,.85);
-    }
-    .mini p{
-      margin:0;
-      color: var(--muted);
-      font-size:13.5px;
-      line-height:1.55;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      margin-top:12px;
-      padding:10px 12px;
-      border-radius:999px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.14);
-      font-size:13px;
-      color: rgba(255,255,255,.82);
-      user-select:none;
-    }
-    .pill b{ color: rgba(255,255,255,.95); font-weight:700; }
-    .pill i{
-      width:9px; height:9px; border-radius:50%;
-      background: linear-gradient(135deg, var(--pink), var(--cyan));
-      box-shadow: 0 0 16px rgba(123,233,255,.45);
+      box-shadow: 0 0 18px rgba(255,211,106,.45);
       display:inline-block;
-    }
-
-    /* Buttons area */
-    .actions{
-      margin-top: 18px;
-      display:flex;
-      gap:14px;
-      flex-wrap:wrap;
-      align-items:center;
-      position:relative;
-      min-height: 64px;
     }
 
     .btn{
       border:0;
       cursor:pointer;
-      padding: 14px 18px;
-      border-radius: 16px;
-      font-size: 15px;
-      font-weight: 700;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight:800;
+      font-size:13px;
       letter-spacing:.02em;
       color: rgba(255,255,255,.92);
       transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
     }
     .btn:active{ transform: scale(.98); }
+    .btn-primary{
+      background: linear-gradient(135deg, rgba(43,123,255,1), rgba(72,215,255,1));
+      box-shadow: 0 18px 40px rgba(43,123,255,.20);
+    }
+    .btn-primary:hover{ filter: brightness(1.05); transform: translateY(-1px); }
+    .btn-outline{
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .btn-outline:hover{ filter: brightness(1.07); transform: translateY(-1px); }
 
-    .btn-yes{
-      background: linear-gradient(135deg, rgba(255,98,180,1), rgba(123,233,255,1));
-      box-shadow: 0 18px 40px rgba(255,98,180,.18);
+    @media (max-width: 980px){
+      .navlinks{ display:none; }
+    }
+
+    /* ====== Main layout ====== */
+    main{
       position:relative;
+      z-index:1;
+      max-width:1180px;
+      margin:0 auto;
+      padding: 26px 18px 84px;
+    }
+
+    /* ====== Hero ====== */
+    .hero{
+      position:relative;
+      border-radius: var(--r2);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(900px 500px at 30% 30%, rgba(72,215,255,.18), transparent 60%),
+        radial-gradient(800px 520px at 80% 40%, rgba(255,82,184,.18), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      min-height: 470px;
+    }
+
+    /* faux “image hero” + blur motion */
+    .hero-bg{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 520px at 75% 45%, rgba(255,255,255,.10), transparent 55%),
+        radial-gradient(900px 520px at 20% 40%, rgba(255,255,255,.06), transparent 55%),
+        linear-gradient(115deg, rgba(43,123,255,.30), rgba(72,215,255,.15), rgba(255,82,184,.20));
+      filter: saturate(1.1);
+      transform: scale(1.08);
+    }
+    .hero-bg:after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(3px 3px at 60px 70px, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(2px 2px at 220px 160px, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(2px 2px at 420px 90px, rgba(255,255,255,.28), transparent 60%),
+        radial-gradient(2px 2px at 720px 200px, rgba(255,255,255,.22), transparent 60%);
+      opacity:.55;
+      mix-blend-mode: screen;
+    }
+
+    /* courbe en bas type “site parc” */
+    .hero-wave{
+      position:absolute;
+      left:-10%;
+      bottom:-65px;
+      width:120%;
+      height:220px;
+      background: radial-gradient(800px 180px at 50% 40%, rgba(255,255,255,.25), transparent 60%);
+      filter: blur(18px);
+      opacity:.65;
+    }
+
+    .hero-inner{
+      position:relative;
+      padding: 30px 30px 26px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:22px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .hero-inner{ grid-template-columns:1fr; padding:24px; }
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.82);
+      font-size:12px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: linear-gradient(135deg, var(--gold), var(--pink));
+      box-shadow: 0 0 18px rgba(255,211,106,.55);
+    }
+
+    .h-title{
+      margin:14px 0 10px;
+      font-size: clamp(28px, 4.2vw, 54px);
+      line-height:1.02;
+      letter-spacing:-.02em;
+    }
+    .h-title span{
+      background: linear-gradient(90deg, rgba(255,211,106,1), rgba(255,82,184,1), rgba(72,215,255,1));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      filter: drop-shadow(0 12px 26px rgba(0,0,0,.22));
+    }
+    .h-sub{
+      margin:0 0 16px;
+      color: var(--muted);
+      line-height:1.55;
+      font-size: 15px;
+      max-width: 62ch;
+    }
+
+    /* left: promo card */
+    .promo{
+      margin-top:14px;
+      width:min(360px, 100%);
+      border-radius: 18px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,.25);
+      padding:14px 14px 12px;
+    }
+    .promo-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .promo-top b{
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.86);
+    }
+    .price{
+      display:flex;
+      align-items:baseline;
+      gap:6px;
+      color: rgba(255,255,255,.92);
+    }
+    .price strong{ font-size:28px; }
+    .price small{ color: rgba(255,255,255,.72); font-weight:700; }
+
+    .promo p{
+      margin: 8px 0 10px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.70);
+      line-height:1.45;
+    }
+    .promo .btn{
+      width:100%;
+      justify-content:center;
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    /* right: “castle” + quick actions */
+    .castle-card{
+      border-radius: var(--r2);
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 60px rgba(0,0,0,.22);
+      overflow:hidden;
+      position:relative;
+      min-height: 360px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .castle-top{
+      padding: 18px 18px 0;
+    }
+    .castle-top h3{
+      margin:0 0 6px;
+      font-size: 14px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.85);
+    }
+    .castle-top p{
+      margin:0;
+      color: rgba(255,255,255,.70);
+      font-size: 13.5px;
+      line-height:1.5;
+    }
+
+    .castle-illu{
+      position:relative;
+      height: 220px;
+      margin: 8px 12px 12px;
+      border-radius: 22px;
+      background:
+        radial-gradient(650px 200px at 50% 100%, rgba(255,255,255,.14), transparent 60%),
+        linear-gradient(135deg, rgba(255,82,184,.15), rgba(72,215,255,.12));
+      border:1px solid rgba(255,255,255,.14);
       overflow:hidden;
     }
-    .btn-yes:before{
-      content:"";
+    .castle-illu .shine{
       position:absolute; inset:-60% -40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.45), transparent 55%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
       transform: rotate(18deg);
-      opacity:.35;
+      animation: shine 4.8s ease-in-out infinite;
+      pointer-events:none;
     }
-    .btn-yes:hover{ filter: brightness(1.07); transform: translateY(-1px); }
-
-    .btn-no{
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 14px 30px rgba(0,0,0,.20);
-      position:absolute; /* pour qu'il puisse bouger */
-      left: 160px; top: 0px;
+    @keyframes shine{
+      0%{ transform: translateX(-35%) rotate(18deg); opacity:0; }
+      35%{ opacity:.7; }
+      65%{ opacity:.25; }
+      100%{ transform: translateX(45%) rotate(18deg); opacity:0; }
     }
-    @media (max-width: 520px){
-      .btn-no{ left: 10px; top: 62px; }
-    }
-    .btn-no:hover{ filter: brightness(1.07); }
-
-    .hint{
-      margin-top: 10px;
-      color: rgba(255,255,255,.62);
-      font-size: 12.5px;
+    .castle-illu svg{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      opacity:.95;
+      filter: drop-shadow(0 16px 28px rgba(0,0,0,.32));
     }
 
-    /* Modal */
+    .quickbar{
+      background: rgba(0,0,0,.16);
+      border-top:1px solid rgba(255,255,255,.12);
+      padding: 12px 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+    }
+    .qitem{
+      flex:1 1 160px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 12px 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .qicon{
+      width:34px;height:34px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(255,211,106,.95), rgba(255,82,184,.85));
+      box-shadow: 0 14px 30px rgba(255,82,184,.14);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:900;
+      color: rgba(0,0,0,.65);
+    }
+    .qitem b{ display:block; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+    .qitem span{ display:block; font-size:12.5px; color: rgba(255,255,255,.70); margin-top:4px; line-height:1.35; }
+
+    /* ====== Booking overlay ====== */
     .overlay{
       position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
       display:none;
       align-items:center;
       justify-content:center;
       padding:18px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(8px);
       z-index:50;
     }
-    .modal{
-      width:min(560px, 96vw);
-      border-radius: 26px;
-      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+    .sheet{
+      width: min(980px, 96vw);
+      border-radius: 28px;
+      background: rgba(16, 14, 30, .92);
+      border:1px solid rgba(255,255,255,.20);
+      box-shadow: var(--shadow2);
       overflow:hidden;
       position:relative;
     }
-    .modal-head{
-      padding:18px 18px 0;
+    .sheet-head{
+      padding: 16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background: rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .sheet-head b{
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:12px;
+      color: rgba(255,255,255,.82);
+    }
+    .sheet-close{
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.9);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    .sheet-body{
+      padding: 18px;
+      display:grid;
+      grid-template-columns: 1fr .85fr;
+      gap:18px;
+    }
+    @media (max-width: 980px){
+      .sheet-body{ grid-template-columns:1fr; }
+    }
+
+    .card{
+      border-radius: 24px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card h2{
+      margin:0 0 8px;
+      font-size: 20px;
+      letter-spacing:-.01em;
+    }
+    .card p{
+      margin:0;
+      color: rgba(255,255,255,.75);
+      line-height:1.5;
+      font-size: 14px;
+    }
+
+    .steps{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .step{
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.80);
+      font-size:12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      letter-spacing:.02em;
+    }
+    .step i{
+      width:10px;height:10px;border-radius:50%;
+      background: linear-gradient(135deg, var(--blue2), var(--pink));
+      box-shadow: 0 0 18px rgba(72,215,255,.35);
+      display:inline-block;
+    }
+
+    /* Date picker "roulette" */
+    .picker{
+      margin-top: 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      padding: 14px;
+    }
+    .picker-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .picker-head b{
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.82);
+    }
+    .status{
+      font-size:12px;
+      color: rgba(255,255,255,.78);
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.14);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .status .s-dot{
+      width:8px;height:8px;border-radius:50%;
+      background: rgba(255,82,184,1);
+      box-shadow: 0 0 18px rgba(255,82,184,.35);
+    }
+    .wheelWrap{
+      display:grid;
+      grid-template-columns: 46px 1fr 46px;
+      gap:10px;
+      align-items:center;
+    }
+    .wheelBtn{
+      height:52px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.90);
+      cursor:pointer;
+      font-weight:900;
+      font-size:18px;
+    }
+    .wheel{
+      position:relative;
+      height: 160px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+    .wheel:before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(16,14,30,.95), transparent 30%, transparent 70%, rgba(16,14,30,.95));
+      pointer-events:none;
+    }
+    .wheel:after{
+      content:"";
+      position:absolute;
+      left:10px; right:10px;
+      top:50%;
+      height:44px;
+      transform: translateY(-50%);
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      pointer-events:none;
+    }
+
+    .wheelList{
+      position:absolute;
+      top:50%;
+      left:0; right:0;
+      transform: translateY(-50%);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      transition: transform .25s ease;
+    }
+    .wheelItem{
+      width: calc(100% - 22px);
+      padding: 10px 12px;
+      border-radius: 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color: rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+    .wheelItem small{
+      font-size:12px;
+      font-weight:800;
+      color: rgba(255,255,255,.62);
+    }
+    .wheelItem[data-active="true"]{
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.18);
+      color: rgba(255,255,255,.92);
+      box-shadow: 0 18px 40px rgba(0,0,0,.30);
+    }
+
+    .ctaRow{
+      margin-top: 12px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .btn-book{
+      background: linear-gradient(135deg, rgba(255,82,184,1), rgba(255,211,106,1));
+      box-shadow: 0 18px 40px rgba(255,82,184,.16);
+    }
+    .btn-book:hover{ filter: brightness(1.06); transform: translateY(-1px); }
+
+    .note{
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.70);
+      line-height:1.4;
+    }
+
+    /* ====== Valentine reveal modal ====== */
+    .vOverlay{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(8px);
+      z-index:70;
+    }
+    .vModal{
+      width:min(640px, 96vw);
+      border-radius: 28px;
+      background: rgba(18, 16, 34, .94);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position:relative;
+    }
+    .vHead{
+      padding: 18px 18px 0;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:10px;
     }
-    .modal h2{
+    .vHead h2{
       margin:0;
       font-size: 22px;
       letter-spacing:-.01em;
+      color: rgba(255,255,255,.95);
+      text-shadow: 0 10px 24px rgba(0,0,0,.45);
     }
-    .close{
+    .vClose{
+      border:1px solid rgba(255,255,255,.18);
       background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.18);
       color: rgba(255,255,255,.92);
-      border-radius: 14px;
-      padding: 10px 12px;
+      border-radius:14px;
+      padding:10px 12px;
       cursor:pointer;
+      font-weight:900;
     }
-    .modal-body{
-      padding: 10px 18px 18px;
+    .vBody{
+      padding: 12px 18px 18px;
+      color: rgba(255,255,255,.90);
+      line-height:1.6;
+      font-size: 15px;
+    }
+    .vTicket{
+      margin-top: 14px;
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(700px 160px at 50% 0%, rgba(255,82,184,.22), transparent 60%),
+        radial-gradient(700px 160px at 50% 100%, rgba(72,215,255,.18), transparent 60%),
+        rgba(255,255,255,.06);
+      padding: 14px;
+    }
+    .vTicket b{
+      display:block;
+      font-size: 12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
       color: rgba(255,255,255,.82);
-      line-height:1.55;
-      font-size: 14.5px;
+      margin-bottom:8px;
     }
-    .modal-foot{
-      padding: 0 18px 18px;
+    .vTicket .row{
       display:flex;
+      justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
+    }
+    .tag{
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.85);
+      font-weight:900;
+      font-size:13px;
+      display:inline-flex;
       align-items:center;
-      justify-content:flex-end;
+      gap:10px;
     }
-    .btn-ghost{
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.16);
-      box-shadow:none;
+    .tag i{
+      width:9px;height:9px;border-radius:50%;
+      background: linear-gradient(135deg, var(--gold), var(--pink));
+      box-shadow: 0 0 18px rgba(255,211,106,.45);
+      display:inline-block;
     }
-    .btn-ghost:hover{ filter: brightness(1.06); transform: translateY(-1px); }
 
-    /* Confettis */
+    .vActions{
+      margin-top: 14px;
+      position:relative;
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      align-items:center;
+      padding-bottom: 72px; /* réserve place pour Non */
+      min-height: 120px;
+    }
+    .btn-yes{
+      background: linear-gradient(135deg, rgba(255,82,184,1), rgba(72,215,255,1));
+      box-shadow: 0 18px 40px rgba(255,82,184,.18);
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 15px;
+    }
+    .btn-no{
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 14px 30px rgba(0,0,0,.20);
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 15px;
+
+      position:absolute;
+      left: 0px;
+      top: 70px; /* jamais sur Oui */
+    }
+
+    /* Confetti canvas */
     canvas#confetti{
-      position:fixed;
-      inset:0;
+      position:fixed; inset:0;
       pointer-events:none;
-      z-index:60;
+      z-index:90;
       display:none;
     }
 
-    /* Small footer */
+    /* tiny footer */
     .footer{
-      margin-top: 24px;
+      margin-top: 18px;
       color: rgba(255,255,255,.55);
       font-size: 12px;
       text-align:center;
-    }
-    .footer a{
-      color: rgba(255,211,106,.85);
-      text-decoration:none;
-      border-bottom:1px dashed rgba(255,211,106,.35);
     }
   </style>
 </head>
@@ -447,238 +837,447 @@
 <body>
   <div class="stars"></div>
   <div class="stars2"></div>
-  <div class="stars3"></div>
 
-  <div class="topbar">
-    <div class="topbar-inner">
+  <header>
+    <div class="nav">
       <div class="brand">
-        <div class="badge" aria-hidden="true"></div>
-        <div>
-          <h1>MAGIC MOMENT</h1>
-          <small>une petite aventure… juste pour toi ✨</small>
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-title">
+          <b>MAGICAL PARK</b>
+          <span>le parc des moments enchantés ✨</span>
         </div>
       </div>
-      <div class="chip">🏰 ✨ 💖 <span style="opacity:.7">—</span> <span id="dateChip"></span></div>
+
+      <nav class="navlinks" aria-label="Navigation">
+        <a href="#attractions">Nos mondes</a>
+        <a href="#shows">Spectacles</a>
+        <a href="#stay">Séjours</a>
+        <a href="#plan">Préparer la visite</a>
+      </nav>
+
+      <div class="right">
+        <div class="chip"><i></i><span id="today"></span></div>
+        <button class="btn btn-outline" id="btnTickets">Billets</button>
+        <button class="btn btn-primary" id="btnReserve">Réserver</button>
+      </div>
     </div>
-  </div>
+  </header>
 
   <main>
-    <section class="hero">
-      <!-- LEFT -->
-      <div class="panel panel-left">
-        <div class="sparkle" aria-hidden="true"></div>
+    <section class="hero" aria-label="Accueil">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-wave" aria-hidden="true"></div>
 
-        <div class="kicker"><span class="k-dot"></span> Invitation féerique</div>
-
-        <h2 class="title">
-          Veux-tu être <span>ma Valentine</span> ? 💘
-        </h2>
-
-        <p class="subtitle">
-          J’ai préparé une petite page comme une entrée dans un monde magique…  
-          Promis, c’est <b>une expérience</b> : lumières, confettis, et une réponse qui fait sourire 😌✨
-        </p>
-
-        <div class="actions" id="actions">
-          <button class="btn btn-yes" id="yesBtn">Oui, évidemment 💖</button>
-          <button class="btn btn-no" id="noBtn">Non 🙄</button>
-        </div>
-
-        <div class="hint">Astuce : le bouton “Non” est… un peu timide 😈</div>
-
-        <div class="castle" aria-hidden="true">
-          <div class="shine"></div>
-          <!-- illustration "château" originale (inspirée féerique, pas une copie) -->
-          <svg viewBox="0 0 900 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                <stop stop-color="rgba(255,211,106,0.95)"/>
-                <stop offset="0.5" stop-color="rgba(255,98,180,0.85)"/>
-                <stop offset="1" stop-color="rgba(123,233,255,0.8)"/>
-              </linearGradient>
-              <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
-                <stop stop-color="rgba(255,255,255,0.18)"/>
-                <stop offset="1" stop-color="rgba(255,255,255,0.06)"/>
-              </linearGradient>
-            </defs>
-
-            <!-- moon glow -->
-            <circle cx="740" cy="85" r="62" fill="rgba(255,255,255,0.09)"/>
-            <circle cx="740" cy="85" r="46" fill="rgba(255,255,255,0.06)"/>
-
-            <!-- ground mist -->
-            <path d="M0 250 C180 210, 320 290, 520 250 C700 215, 780 275, 900 240 V320 H0 Z"
-              fill="rgba(255,255,255,0.06)"/>
-
-            <!-- castle base -->
-            <path d="M230 260 V165 L285 145 V120 L330 105 V145 L375 120 V145 L420 115 V145 L465 120 V145 L510 105 V145 L555 120 V145 L610 145 V260"
-              fill="url(#g2)" stroke="rgba(255,255,255,0.18)"/>
-
-            <!-- central tower -->
-            <path d="M420 260 V125 L450 95 L480 125 V260"
-              fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.18)"/>
-
-            <!-- side towers -->
-            <path d="M275 260 V155 L295 135 L315 155 V260" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)"/>
-            <path d="M585 260 V155 L605 135 L625 155 V260" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)"/>
-
-            <!-- flags -->
-            <path d="M450 96 L450 62" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
-            <path d="M450 66 C465 66, 470 74, 458 82 C470 84, 465 96, 450 90" fill="url(#g1)" opacity="0.85"/>
-
-            <path d="M295 136 L295 108" stroke="url(#g1)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-            <path d="M295 110 C305 110, 308 116, 300 122 C308 124, 305 132, 295 128" fill="url(#g1)" opacity="0.75"/>
-
-            <path d="M605 136 L605 108" stroke="url(#g1)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
-            <path d="M605 110 C615 110, 618 116, 610 122 C618 124, 615 132, 605 128" fill="url(#g1)" opacity="0.75"/>
-
-            <!-- sparkle path -->
-            <path d="M90 120 C170 60, 260 70, 350 40 C470 -5, 570 40, 690 30 C780 22, 820 10, 860 18"
-              stroke="url(#g1)" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
-            <circle cx="120" cy="100" r="3.5" fill="rgba(255,255,255,0.55)"/>
-            <circle cx="360" cy="44" r="3.5" fill="rgba(255,255,255,0.45)"/>
-            <circle cx="700" cy="30" r="3.5" fill="rgba(255,255,255,0.45)"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="panel panel-right">
-        <div class="mini">
-          <h3>🪄 Règle du jeu</h3>
-          <p>
-            C’est une page magique : si tu choisis “Non”, le bouton essaie de s’échapper…
-            comme s’il connaissait déjà la bonne réponse 😈
+      <div class="hero-inner">
+        <div>
+          <div class="kicker"><span class="dot"></span> Offres du moment</div>
+          <h1 class="h-title">Entre dans un <span>monde magique</span> ✨</h1>
+          <p class="h-sub">
+            Une journée, un château, des lumières… et une surprise cachée au moment parfait.
+            <b>(Indice : ça se passe à la réservation 😉)</b>
           </p>
-          <div class="pill"><i></i> Mode : <b>Féerique + Troll</b></div>
+
+          <div class="promo">
+            <div class="promo-top">
+              <b>Hôtel + Billets</b>
+              <div class="price"><strong>149€</strong><small>/nuit*</small></div>
+            </div>
+            <p>
+              Tarif indicatif. Offre “moment enchanté” soumise à disponibilité.
+              Certaines dates peuvent être… <b>spéciales</b> ✨
+            </p>
+            <button class="btn btn-outline" id="btnDiscover">En savoir plus</button>
+          </div>
         </div>
 
-        <div class="mini">
-          <h3>✨ Promesse</h3>
-          <p>
-            Si tu cliques “Oui”, tu déclenches une petite célébration : confettis, message secret,
-            et un “ticket” symbolique pour un moment à deux 💖
-          </p>
-          <div class="pill"><i></i> Effets : <b>Confettis + Pop-up</b></div>
-        </div>
+        <div class="castle-card" id="attractions">
+          <div class="castle-top">
+            <h3>🏰 Le Château des Étoiles</h3>
+            <p>
+              Une silhouette féerique, des feux d’artifice… et une question que tu n’oublieras pas 💘
+            </p>
+          </div>
 
-        <div class="mini">
-          <h3>🎵 Option musique</h3>
-          <p>
-            Sur téléphone, la musique démarre seulement après une action.
-            Ici elle est <b>désactivée par défaut</b> — tu peux l’activer dans le code (je t’explique plus bas).
-          </p>
-          <div class="pill"><i></i> Compatibilité : <b>Mobile OK</b></div>
-        </div>
+          <div class="castle-illu" aria-hidden="true">
+            <div class="shine"></div>
+            <svg viewBox="0 0 900 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="rgba(255,211,106,0.95)"/>
+                  <stop offset="0.5" stop-color="rgba(255,82,184,0.85)"/>
+                  <stop offset="1" stop-color="rgba(72,215,255,0.8)"/>
+                </linearGradient>
+                <linearGradient id="g2" x1="0" y1="1" x2="1" y2="0">
+                  <stop stop-color="rgba(255,255,255,0.18)"/>
+                  <stop offset="1" stop-color="rgba(255,255,255,0.06)"/>
+                </linearGradient>
+              </defs>
+              <circle cx="740" cy="85" r="62" fill="rgba(255,255,255,0.09)"/>
+              <circle cx="740" cy="85" r="46" fill="rgba(255,255,255,0.06)"/>
+              <path d="M0 250 C180 210, 320 290, 520 250 C700 215, 780 275, 900 240 V320 H0 Z"
+                fill="rgba(255,255,255,0.06)"/>
+              <path d="M230 260 V165 L285 145 V120 L330 105 V145 L375 120 V145 L420 115 V145 L465 120 V145 L510 105 V145 L555 120 V145 L610 145 V260"
+                fill="url(#g2)" stroke="rgba(255,255,255,0.18)"/>
+              <path d="M420 260 V125 L450 95 L480 125 V260"
+                fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.18)"/>
+              <path d="M275 260 V155 L295 135 L315 155 V260" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)"/>
+              <path d="M585 260 V155 L605 135 L625 155 V260" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)"/>
+              <path d="M450 96 L450 62" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
+              <path d="M450 66 C465 66, 470 74, 458 82 C470 84, 465 96, 450 90" fill="url(#g1)" opacity="0.85"/>
+              <path d="M295 136 L295 108" stroke="url(#g1)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+              <path d="M295 110 C305 110, 308 116, 300 122 C308 124, 305 132, 295 128" fill="url(#g1)" opacity="0.75"/>
+              <path d="M605 136 L605 108" stroke="url(#g1)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+              <path d="M605 110 C615 110, 618 116, 610 122 C618 124, 615 132, 605 128" fill="url(#g1)" opacity="0.75"/>
+              <path d="M90 120 C170 60, 260 70, 350 40 C470 -5, 570 40, 690 30 C780 22, 820 10, 860 18"
+                stroke="url(#g1)" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+              <circle cx="120" cy="100" r="3.5" fill="rgba(255,255,255,0.55)"/>
+              <circle cx="360" cy="44" r="3.5" fill="rgba(255,255,255,0.45)"/>
+              <circle cx="700" cy="30" r="3.5" fill="rgba(255,255,255,0.45)"/>
+            </svg>
+          </div>
 
-        <div class="footer">
-          Astuce : si tu veux ajouter son prénom, cherche <b>PRÉNOM_ICI</b> dans le code.
+          <div class="quickbar" id="shows">
+            <div class="qitem">
+              <div class="qicon">✨</div>
+              <div>
+                <b>Parade</b>
+                <span>Une finale… qui ressemble à une déclaration 💘</span>
+              </div>
+            </div>
+            <div class="qitem">
+              <div class="qicon">🎆</div>
+              <div>
+                <b>Nocturne</b>
+                <span>Feux d’artifice + confettis (vraiment)</span>
+              </div>
+            </div>
+            <div class="qitem" id="stay">
+              <div class="qicon">🏨</div>
+              <div>
+                <b>Séjour</b>
+                <span>Une date “spéciale” est disponible…</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <div class="footer" id="plan">
+      Conseil : clique sur <b>Réserver</b> en haut à droite… et laisse-toi guider ✨
+    </div>
   </main>
+
+  <!-- Booking sheet -->
+  <div class="overlay" id="bookingOverlay" role="dialog" aria-modal="true">
+    <div class="sheet">
+      <div class="sheet-head">
+        <b>Réservation — Séjour enchanté</b>
+        <button class="sheet-close" id="bookingClose">Fermer</button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="card">
+          <h2>Choisis ta date ✨</h2>
+          <p>
+            Certaines dates sont très demandées… et une seule est parfaite pour une surprise de Saint-Valentin 💘
+          </p>
+
+          <div class="steps">
+            <div class="step"><i></i><span>Étape 1 — Date</span></div>
+            <div class="step"><i></i><span>Étape 2 — Confirmation</span></div>
+            <div class="step"><i></i><span>Étape 3 — Surprise</span></div>
+          </div>
+
+          <div class="picker">
+            <div class="picker-head">
+              <b>Dates disponibles</b>
+              <div class="status" id="status">
+                <span class="s-dot"></span><span id="statusText">Complet… sauf une ✨</span>
+              </div>
+            </div>
+
+            <div class="wheelWrap">
+              <button class="wheelBtn" id="upBtn" aria-label="Monter">▲</button>
+
+              <div class="wheel" aria-label="Sélecteur de date">
+                <div class="wheelList" id="wheelList">
+                  <!-- items via JS -->
+                </div>
+              </div>
+
+              <button class="wheelBtn" id="downBtn" aria-label="Descendre">▼</button>
+            </div>
+
+            <div class="note" id="note">
+              Astuce : fais défiler… tu verras qu’une seule date a une aura spéciale 💖
+            </div>
+
+            <div class="ctaRow">
+              <button class="btn btn-outline" id="fakeTry">Vérifier disponibilité</button>
+              <button class="btn btn-book" id="confirmDate">Confirmer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Résumé</h2>
+          <p>
+            Offre “Moment enchanté” — accès au Château des Étoiles, parade nocturne, et… une surprise cachée 🎟️✨
+          </p>
+
+          <div style="margin-top:14px" class="vTicket">
+            <b>Ticket</b>
+            <div class="row">
+              <div class="tag"><i></i><span id="selDateLabel">Date : —</span></div>
+              <div class="tag"><i></i><span>Accès : 2 personnes</span></div>
+              <div class="tag"><i></i><span>Finale : ✨💘</span></div>
+            </div>
+          </div>
+
+          <div class="note" style="margin-top:12px">
+            Si la date n’est pas le <b>14 février</b>, c’est “complet”… (oui oui, même si tu insistes 😈)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Valentine Modal -->
+  <div class="vOverlay" id="vOverlay" role="dialog" aria-modal="true">
+    <div class="vModal">
+      <div class="vHead">
+        <h2>💖 Réservation validée…</h2>
+        <button class="vClose" id="vClose">Fermer</button>
+      </div>
+
+      <div class="vBody">
+        <p style="margin:0 0 10px">
+          Une dernière étape avant de finaliser…
+        </p>
+
+        <div class="vTicket">
+          <b>Invitation spéciale</b>
+          <div class="row">
+            <div class="tag"><i></i><span>Destination : Château ✨</span></div>
+            <div class="tag"><i></i><span>Date : 14 février 💘</span></div>
+            <div class="tag"><i></i><span>Code : “AMOUR”</span></div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <p style="margin:0 0 10px">
+            <b>Question officielle :</b>
+          </p>
+
+          <p style="margin:0; font-size:18px">
+            Veux-tu être <b>ma Valentine</b> ? 💘✨
+          </p>
+
+          <div class="vActions" id="vActions">
+            <button class="btn btn-yes" id="yesBtn">Oui, évidemment 💖</button>
+            <button class="btn btn-no" id="noBtn">Non 🙄</button>
+          </div>
+
+          <p style="margin:10px 0 0; color: rgba(255,255,255,.65); font-size:12.5px">
+            Astuce : le bouton “Non” est… très pudique 😈
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Confettis -->
   <canvas id="confetti"></canvas>
 
-  <!-- Modal -->
-  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-    <div class="modal">
-      <div class="modal-head">
-        <h2 id="mTitle">💖 C’est officiel !</h2>
-        <button class="close" id="closeBtn">Fermer</button>
-      </div>
-      <div class="modal-body" id="modalBody">
-        <p style="margin:0 0 10px">
-          Tu viens d’accepter une invitation magique ✨
-        </p>
-        <p style="margin:0">
-          <b>Estel</b>, veux-tu être ma Valentine pour une aventure à deux ? 🏰💘
-          <br><span style="opacity:.75">(Oui, tu es tombée dans le piège 😈)</span>
-        </p>
-      </div>
-      <div class="modal-foot">
-        <button class="btn btn-ghost" id="copyBtn">Copier une phrase 💌</button>
-        <button class="btn btn-yes" id="okBtn">J’accepte (encore) 💖</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // ✅ Affiche une date sympa en haut
+    // ===== Date du jour dans le header =====
     (function(){
       const d = new Date();
       const opts = { weekday:'long', day:'2-digit', month:'long' };
-      document.getElementById('dateChip').textContent =
-        d.toLocaleDateString('fr-FR', opts);
+      document.getElementById('today').textContent = d.toLocaleDateString('fr-FR', opts);
     })();
 
-    // 🎯 Elements
-    const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
-    const actions = document.getElementById('actions');
-    const overlay = document.getElementById('overlay');
-    const closeBtn = document.getElementById('closeBtn');
-    const okBtn = document.getElementById('okBtn');
-    const copyBtn = document.getElementById('copyBtn');
-    const confettiCanvas = document.getElementById('confetti');
+    // ===== Elements =====
+    const btnReserve = document.getElementById('btnReserve');
+    const btnTickets = document.getElementById('btnTickets');
+    const btnDiscover = document.getElementById('btnDiscover');
 
-    // ====== 😈 Bouton "Non" qui fuit (PC + mobile) ======
+    const bookingOverlay = document.getElementById('bookingOverlay');
+    const bookingClose = document.getElementById('bookingClose');
+
+    const wheelList = document.getElementById('wheelList');
+    const upBtn = document.getElementById('upBtn');
+    const downBtn = document.getElementById('downBtn');
+    const statusText = document.getElementById('statusText');
+    const note = document.getElementById('note');
+    const selDateLabel = document.getElementById('selDateLabel');
+    const confirmDate = document.getElementById('confirmDate');
+    const fakeTry = document.getElementById('fakeTry');
+
+    const vOverlay = document.getElementById('vOverlay');
+    const vClose = document.getElementById('vClose');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const vActions = document.getElementById('vActions');
+
+    // ===== Booking open/close =====
+    function openBooking(){
+      bookingOverlay.style.display = 'flex';
+      // reset
+      selectedIndex = 2; // start near middle
+      renderWheel();
+      updateLabels();
+    }
+    function closeBooking(){
+      bookingOverlay.style.display = 'none';
+    }
+
+    btnReserve.addEventListener('click', openBooking);
+    btnTickets.addEventListener('click', openBooking);
+    btnDiscover.addEventListener('click', openBooking);
+    bookingClose.addEventListener('click', closeBooking);
+    bookingOverlay.addEventListener('click', (e) => { if(e.target === bookingOverlay) closeBooking(); });
+
+    // ===== Fake wheel dates (only Feb 14 available) =====
+    const dates = [
+      { label: "10 février", avail:false },
+      { label: "11 février", avail:false },
+      { label: "12 février", avail:false },
+      { label: "13 février", avail:false },
+      { label: "14 février", avail:true  },
+      { label: "15 février", avail:false },
+      { label: "16 février", avail:false },
+      { label: "17 février", avail:false }
+    ];
+
+    let selectedIndex = 4; // default: 14 février
+
+    function renderWheel(){
+      wheelList.innerHTML = "";
+      // show all items, highlight selected
+      dates.forEach((d, i) => {
+        const el = document.createElement('div');
+        el.className = 'wheelItem';
+        el.dataset.active = (i === selectedIndex) ? "true" : "false";
+        el.innerHTML = `
+          <span>${d.label}</span>
+          <small>${d.avail ? "DISPONIBLE ✨" : "COMPLET"}</small>
+        `;
+        el.addEventListener('click', () => {
+          selectedIndex = i;
+          renderWheel();
+          updateLabels();
+        });
+        wheelList.appendChild(el);
+      });
+
+      // center selected visually: move list up/down
+      // (each item approx 54px including gap)
+      const itemHeight = 54; // tuned visually
+      const offset = (selectedIndex - 1) * itemHeight; // keeps selected in center zone
+      wheelList.style.transform = `translateY(calc(-50% - ${offset}px))`;
+    }
+
+    function updateLabels(){
+      const d = dates[selectedIndex];
+      selDateLabel.textContent = "Date : " + d.label;
+
+      if(d.avail){
+        statusText.textContent = "Disponible ✨ (oui… LA date)";
+        note.textContent = "Cette date brille un peu plus que les autres… 💘";
+      }else{
+        statusText.textContent = "Complet 😭 (essaie encore)";
+        note.textContent = "Complet… mais il paraît qu’une date spéciale existe 😈";
+      }
+    }
+
+    upBtn.addEventListener('click', () => {
+      selectedIndex = (selectedIndex - 1 + dates.length) % dates.length;
+      renderWheel();
+      updateLabels();
+    });
+    downBtn.addEventListener('click', () => {
+      selectedIndex = (selectedIndex + 1) % dates.length;
+      renderWheel();
+      updateLabels();
+    });
+
+    fakeTry.addEventListener('click', () => {
+      const d = dates[selectedIndex];
+      if(d.avail){
+        statusText.textContent = "Disponible ✨ (réservation possible)";
+      }else{
+        statusText.textContent = "Toujours complet 😭";
+      }
+    });
+
+    // ===== Confirm date -> only Feb 14 opens Valentine =====
+    function openValentine(){
+      vOverlay.style.display = 'flex';
+      startConfetti();
+      // place "Non" safe position
+      noBtn.style.left = '0px';
+      noBtn.style.top = '70px';
+    }
+    function closeValentine(){
+      vOverlay.style.display = 'none';
+    }
+
+    confirmDate.addEventListener('click', () => {
+      const d = dates[selectedIndex];
+      if(!d.avail){
+        statusText.textContent = "Complet… (sauf 14 février 💘)";
+        note.textContent = "Désolé… seul le 14 février est disponible ✨💘";
+        // mini troll: jump to 14
+        selectedIndex = 4;
+        renderWheel();
+        updateLabels();
+        return;
+      }
+      closeBooking();
+      openValentine();
+    });
+
+    vClose.addEventListener('click', closeValentine);
+    vOverlay.addEventListener('click', (e) => { if(e.target === vOverlay) closeValentine(); });
+
+    // ===== “Non” flees without overlapping “Oui” =====
     function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
     function moveNoButton(){
-      const rect = actions.getBoundingClientRect();
+      const rect = vActions.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
 
-      // zone de déplacement = autour de la zone actions
-      const padding = 6;
-      const minX = rect.left + padding;
-      const maxX = rect.right - btnRect.width - padding;
-      const minY = rect.top + padding;
-      const maxY = rect.bottom - btnRect.height - padding;
+      // movement area inside vActions, but keep it under the "yes" row:
+      // top start = 62px to prevent overlap with yes area.
+      const padding = 8;
+      const minX = padding;
+      const maxX = rect.width - btnRect.width - padding;
 
-      // si l'espace est trop petit (mobile), on bouge dans l'écran
-      const viewportFallback = (maxX - minX < 40) || (maxY - minY < 20);
+      const minY = 62; // below yes line
+      const maxY = rect.height - btnRect.height - padding;
 
-      let x, y;
-      if(viewportFallback){
-        x = Math.random() * (window.innerWidth - btnRect.width - 20) + 10;
-        y = Math.random() * (window.innerHeight - btnRect.height - 140) + 90;
-      }else{
-        x = Math.random() * (maxX - minX) + minX;
-        y = Math.random() * (maxY - minY) + minY;
-      }
+      let x = Math.random() * (maxX - minX) + minX;
+      let y = Math.random() * (maxY - minY) + minY;
 
-      // convert to relative inside actions (because button is absolute)
-      const parentRect = actions.getBoundingClientRect();
-      const left = clamp(x - parentRect.left, 0, parentRect.width - btnRect.width);
-      const top  = clamp(y - parentRect.top,  0, parentRect.height - btnRect.height);
-
-      noBtn.style.left = left + "px";
-      noBtn.style.top  = top + "px";
+      noBtn.style.left = clamp(x, 0, rect.width - btnRect.width) + "px";
+      noBtn.style.top  = clamp(y, minY, rect.height - btnRect.height) + "px";
     }
 
-    // PC: au survol
     noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('click', (e) => { e.preventDefault(); moveNoButton(); });
+    noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); }, {passive:false});
 
-    // Mobile: au toucher (premier tap)
-    noBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      moveNoButton();
-    }, {passive:false});
-
-    // Bonus: si elle essaie encore
-    noBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      moveNoButton();
+    // ===== Yes -> confetti + success message =====
+    yesBtn.addEventListener('click', () => {
+      startConfetti();
+      alert("💖 Réservation confirmée !\n\nRendez-vous le 14 février… Valentine validée ✨🏰");
     });
 
-    // ====== 🎉 Confettis (canvas) ======
-    const confetti = {
-      running:false,
-      parts:[],
-      t:0
-    };
+    // ===== Confettis =====
+    const confettiCanvas = document.getElementById('confetti');
+    const confetti = { running:false, parts:[], t:0 };
 
     function resizeCanvas(){
       confettiCanvas.width = window.innerWidth;
@@ -695,25 +1294,25 @@
       confetti.t = 0;
 
       const colors = [
-        [255, 98, 180],
-        [123, 233, 255],
+        [255, 82, 184],
+        [72, 215, 255],
         [255, 211, 106],
         [255, 255, 255],
-        [181, 120, 255]
+        [43, 123, 255]
       ];
 
-      const count = 180;
+      const count = 200;
       for(let i=0;i<count;i++){
         const c = colors[Math.floor(Math.random()*colors.length)];
         confetti.parts.push({
           x: Math.random()*confettiCanvas.width,
           y: -20 - Math.random()*confettiCanvas.height*0.3,
-          vx: (Math.random()-0.5)*4,
-          vy: 2 + Math.random()*6,
+          vx: (Math.random()-0.5)*4.2,
+          vy: 2 + Math.random()*6.8,
           s: 4 + Math.random()*6,
           r: Math.random()*Math.PI,
           vr: (Math.random()-0.5)*0.25,
-          a: 0.85,
+          a: 0.90,
           col: `rgba(${c[0]},${c[1]},${c[2]},`
         });
       }
@@ -728,10 +1327,9 @@
           p.x += p.vx;
           p.y += p.vy;
           p.r += p.vr;
-          p.vy += 0.02; // gravité
+          p.vy += 0.02;
           p.a *= 0.995;
 
-          // wrap x
           if(p.x < -30) p.x = confettiCanvas.width + 30;
           if(p.x > confettiCanvas.width + 30) p.x = -30;
 
@@ -743,7 +1341,6 @@
           ctx.restore();
         }
 
-        // stop après ~4s
         if(confetti.t > 240){
           confetti.running = false;
           confettiCanvas.style.display = 'none';
@@ -754,60 +1351,9 @@
       requestAnimationFrame(frame);
     }
 
-    // ====== ✅ Oui : ouvre modal + confettis + (option musique) ======
-    function openModal(){
-      overlay.style.display = 'flex';
-      startConfetti();
-      const panelRight = document.querySelector('.panel-right');
-    if(panelRight){
-    panelRight.style.display = 'flex';
-    panelRight.style.animation = 'fadeInUp 0.6s ease';
-      }
-    }
-    function closeModal(){
-      overlay.style.display = 'none';
-    }
-
-    yesBtn.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-    okBtn.addEventListener('click', () => {
-      closeModal();
-      startConfetti();
-    });
-
-    // Fermer si clique en dehors
-    overlay.addEventListener('click', (e) => {
-      if(e.target === overlay) closeModal();
-    });
-
-    // Copier une phrase mignonne
-    copyBtn.addEventListener('click', async () => {
-      const text = "J’ai une surprise… Tu veux être ma Valentine ? 💘🏰✨";
-      try{
-        await navigator.clipboard.writeText(text);
-        copyBtn.textContent = "Copié ! 💖";
-        setTimeout(()=> copyBtn.textContent = "Copier une phrase 💌", 1600);
-      }catch{
-        alert("Copie impossible ici, mais voici la phrase :\n\n" + text);
-      }
-    });
-
-    // ====== 🎵 Option musique (facultative) ======
-    // 1) Ajoute un fichier mp3 dans le repo (ex: music.mp3)
-    // 2) Décommente playMusic() dans openModal()
-    // const audio = new Audio('music.mp3');
-    // audio.loop = true;
-    // audio.volume = 0.35;
-    // function playMusic(){
-    //   audio.play().catch(()=>{});
-    // }
-
-    // Petit placement initial du bouton non (au cas où)
-    window.addEventListener('load', () => {
-      // place "Non" bien visible avant qu'il bouge
-      noBtn.style.left = '160px';
-      noBtn.style.top = '0px';
-    });
+    // init wheel
+    renderWheel();
+    updateLabels();
   </script>
 </body>
 </html>
