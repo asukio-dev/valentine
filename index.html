@@ -145,13 +145,10 @@
     /* Hero */
     .hero{
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1fr;
       gap:22px;
-      align-items:stretch;
+      align-items:center;
       margin-top:18px;
-    }
-    @media (max-width: 920px){
-      .hero{ grid-template-columns:1fr; }
     }
 
     .panel{
@@ -258,7 +255,7 @@
     /* Right info card */
     .panel-right{
       padding:22px;
-      display:flex;
+      display:none;
       flex-direction:column;
       gap:14px;
     }
